@@ -4,43 +4,70 @@
 
 @layer base {
   :root {
+    /* Typography */
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-geist: 'Geist', system-ui, sans-serif;
-    --font-geist-mono: 'Geist Mono', monospace;
-    --font-mona: 'Mona Sans', system-ui, sans-serif;
-    --font-ibm-plex: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-manrope: 'Manrope', system-ui, sans-serif;
+
+    /* Color tokens (HSL) */
+    --bg: 240 10% 4%; /* dark navy/black */
+    --primary: 280 100% 34%; /* deep purple */
+    --secondary: 195 100% 75%; /* baby blue */
+    --neon-cyan: 180 100% 50%;
+    --neon-magenta: 300 100% 50%;
   }
 
-  html {
-    font-family: var(--font-sans);
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+  html { scroll-behavior: smooth; }
 
-  body {
-    @apply antialiased;
-  }
+  html { font-family: var(--font-sans); font-feature-settings: "rlig" 1, "calt" 1; }
+  body { @apply antialiased bg-[hsl(var(--bg))]; }
 }
 
-/* Custom utility classes for shadcn/ui patterns */
-@layer utilities {
-  .animate-in {
-    animation-name: animateIn;
-    animation-duration: 350ms;
-    --tw-enter-opacity: initial;
-    --tw-enter-scale: initial;
-    --tw-enter-rotate: initial;
-    --tw-enter-translate-x: initial;
-    --tw-enter-translate-y: initial;
+/* Glassmorphism helpers */
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/10;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 10px 40px -20px hsla(var(--primary)/0.6);
   }
 
-  .animate-out {
-    animation-name: animateOut;
-    animation-duration: 350ms;
-    --tw-exit-opacity: initial;
-    --tw-exit-scale: initial;
-    --tw-exit-rotate: initial;
-    --tw-exit-translate-x: initial;
-    --tw-exit-translate-y: initial;
+  .neon-text {
+    color: hsl(var(--secondary));
+    text-shadow:
+      0 0 12px hsla(var(--neon-cyan)/0.7),
+      0 0 22px hsla(var(--neon-magenta)/0.5);
   }
+
+  .neon-border {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.08) inset,
+      0 0 22px hsla(var(--neon-magenta)/0.35),
+      0 0 44px hsla(var(--neon-cyan)/0.25);
+  }
+
+  .btn-neon {
+    @apply inline-flex items-center justify-center rounded-full text-white font-semibold transition-all;
+    background-image: linear-gradient(90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--neon-magenta)) 50%,
+      hsl(var(--neon-cyan)) 100%
+    );
+    box-shadow:
+      0 0 18px hsla(var(--neon-magenta)/0.6),
+      0 0 36px hsla(var(--neon-cyan)/0.4);
+  }
+  .btn-neon:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 0 22px hsla(var(--neon-magenta)/0.8), 0 0 55px hsla(var(--neon-cyan)/0.6); }
+}
+
+/* Animations */
+@layer utilities {
+  @keyframes float {
+    0% { transform: translateY(0) }
+    50% { transform: translateY(-6px) }
+    100% { transform: translateY(0) }
+  }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsla(var(--neon-magenta)/0.5), 0 0 40px hsla(var(--neon-cyan)/0.3); }
+    50% { box-shadow: 0 0 28px hsla(var(--neon-magenta)/0.8), 0 0 60px hsla(var(--neon-cyan)/0.5); }
+  }
+  .animate-pulse-glow { animation: pulse-glow 2.8s ease-in-out infinite; }
 }
